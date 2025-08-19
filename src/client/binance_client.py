@@ -284,17 +284,24 @@ class BinanceFuturesClient:
         try:
             positions = self.client.futures_position_information()
             
-            # Log non-zero positions
+            # Log non-zero positions with safe key access
+            active_positions = []
             for position in positions:
-                if float(position['positionAmt']) != 0:
+                position_amt = float(position.get('positionAmt', 0))
+                if position_amt != 0:
+                    # Safe key access with defaults
+                    unrealized_profit = float(position.get('unrealizedProfit', position.get('unRealizedProfit', 0)))
+                    entry_price = float(position.get('entryPrice', 0))
+                    
                     logger.log_position_update(
                         position['symbol'],
-                        float(position['positionAmt']),
-                        float(position['unrealizedProfit']),
-                        float(position['entryPrice'])
+                        position_amt,
+                        unrealized_profit,
+                        entry_price
                     )
+                    active_positions.append(position)
             
-            return [pos for pos in positions if float(pos['positionAmt']) != 0]
+            return active_positions
         except BinanceAPIException as e:
             logger.log_error(e, "get_positions")
             raise

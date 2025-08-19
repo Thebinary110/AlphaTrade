@@ -120,13 +120,30 @@ class GridTradingManager:
     
     def _calculate_grid_levels(self, lower_price: float, upper_price: float, 
                               grid_count: int, current_price: float) -> List[Dict[str, Any]]:
-        """Calculate grid price levels"""
+        """Calculate grid price levels with proper tick size alignment"""
         price_range = upper_price - lower_price
         grid_gap = price_range / (grid_count - 1)
         
+        # Get symbol info for tick size
+        try:
+            symbol_info = self.client.get_symbol_info("BTCUSDT")
+            tick_size = 0.1  # Default tick size for BTCUSDT
+            
+            # Find tick size from filters
+            for filter_info in symbol_info.get('filters', []):
+                if filter_info['filterType'] == 'PRICE_FILTER':
+                    tick_size = float(filter_info['tickSize'])
+                    break
+        except:
+            tick_size = 0.1  # Fallback tick size
+        
         levels = []
         for i in range(grid_count):
-            price = lower_price + (i * grid_gap)
+            raw_price = lower_price + (i * grid_gap)
+            
+            # Round to tick size
+            price = round(raw_price / tick_size) * tick_size
+            price = round(price, 1)  # Round to 1 decimal for BTCUSDT
             
             # Determine order type based on current price
             if price < current_price:
@@ -141,7 +158,7 @@ class GridTradingManager:
             
             levels.append({
                 'level': i + 1,
-                'price': round(price, 2),
+                'price': price,
                 'order_type': order_type,
                 'side_color': side_color,
                 'status': 'PENDING'

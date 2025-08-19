@@ -128,15 +128,16 @@ class TradingBot:
                 pos_table.add_column("ROE %", style="white")
                 
                 for pos in positions:
-                    pnl = float(pos['unrealizedProfit'])
-                    roe = float(pos['percentage'])
+                    # Safe key access with fallbacks
+                    pnl = float(pos.get('unrealizedProfit', pos.get('unRealizedProfit', 0)))
+                    roe = float(pos.get('percentage', pos.get('roe', 0)))
                     pnl_color = "green" if pnl >= 0 else "red"
                     
                     pos_table.add_row(
                         pos['symbol'],
-                        f"{float(pos['positionAmt']):.6f}",
-                        f"${float(pos['entryPrice']):,.2f}",
-                        f"${float(pos['markPrice']):,.2f}",
+                        f"{float(pos.get('positionAmt', 0)):.6f}",
+                        f"${float(pos.get('entryPrice', 0)):,.2f}",
+                        f"${float(pos.get('markPrice', 0)):,.2f}",
                         f"[{pnl_color}]{pnl:+.4f}[/{pnl_color}]",
                         f"[{pnl_color}]{roe:+.2f}%[/{pnl_color}]"
                     )
