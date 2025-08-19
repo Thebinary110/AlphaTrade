@@ -1,0 +1,28 @@
+# Core trading dependencies
+python-binance==1.0.19
+click==8.1.7
+requests==2.31.0
+
+# Data validation and processing
+pydantic==2.5.0
+python-dotenv==1.0.0
+
+# Real-time features
+websocket-client==1.6.4
+schedule==1.2.0
+
+# Math and calculations
+numpy==1.24.3
+
+# Enhanced CLI display
+rich==13.7.0
+colorama==0.4.6
+
+# Web interface (optional)
+streamlit==1.28.0
+plotly==5.17.0
+
+# Development and testing
+pytest==7.4.0
+black==23.11.0
+flake8==6.1.0
