@@ -1,4 +1,4 @@
-# 🚀 PRIME Trading Bot
+# PRIME Trading Bot
 
 A modular Python crypto trading bot for Binance.  
 It supports **Grid Trading, OCO (One Cancels the Other), TWAP (Time-Weighted Average Price), and Limit Orders**.  
@@ -11,7 +11,7 @@ The bot is extendable — you can add new strategies inside `src/orders/advanced
 ### 1️⃣ Clone the Repository
 ```bash
 git clone https://github.com/Thebinary110/AlphaTrade
-cd <your-repo>
+
 
 # Create virtual environment
 python -m venv venv
